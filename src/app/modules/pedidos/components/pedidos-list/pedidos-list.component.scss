@@ -1,0 +1,56 @@
+.pedidos-container {
+  .btn {
+    &.btn-info {
+      background: #17a2b8;
+      color: white;
+      
+      &:hover {
+        background: #138496;
+      }
+    }
+    
+    &.btn-success {
+      background: #28a745;
+      color: white;
+      
+      &:hover {
+        background: #218838;
+      }
+    }
+    
+    &.btn-warning {
+      background: #ffc107;
+      color: #212529;
+      
+      &:hover {
+        background: #e0a800;
+      }
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+  }
+}
