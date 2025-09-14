@@ -29,10 +29,10 @@ import { Produto } from '\.\.\/\.\.\/\.\.\/\.\.\/models/pedido.model';
               <input 
                 type="text" 
                 id="nome"
-                formControlName="nome" 
+                formControlName="NOME" 
                 class="form-control"
                 placeholder="Digite o nome do produto">
-              <div *ngIf="produtoForm.get('nome')?.invalid && produtoForm.get('nome')?.touched" 
+              <div *ngIf="produtoForm.get('NOME')?.invalid && produtoForm.get('NOME')?.touched" 
                    class="error-message">
                 Nome é obrigatório
               </div>
@@ -43,10 +43,10 @@ import { Produto } from '\.\.\/\.\.\/\.\.\/\.\.\/models/pedido.model';
               <input 
                 type="text" 
                 id="sku"
-                formControlName="sku" 
+                formControlName="SKU" 
                 class="form-control"
                 placeholder="Código do produto">
-              <div *ngIf="produtoForm.get('sku')?.invalid && produtoForm.get('sku')?.touched" 
+              <div *ngIf="produtoForm.get('SKU')?.invalid && produtoForm.get('SKU')?.touched" 
                    class="error-message">
                 SKU é obrigatório
               </div>
@@ -59,12 +59,12 @@ import { Produto } from '\.\.\/\.\.\/\.\.\/\.\.\/models/pedido.model';
               <input 
                 type="number" 
                 id="precoUnitario"
-                formControlName="precoUnitario" 
+                formControlName="PRECO_UNITARIO" 
                 class="form-control"
                 step="0.01"
                 min="0"
                 placeholder="0,00">
-              <div *ngIf="produtoForm.get('precoUnitario')?.invalid && produtoForm.get('precoUnitario')?.touched" 
+              <div *ngIf="produtoForm.get('PRECO_UNITARIO')?.invalid && produtoForm.get('PRECO_UNITARIO')?.touched" 
                    class="error-message">
                 Preço é obrigatório e deve ser maior que zero
               </div>
@@ -75,11 +75,11 @@ import { Produto } from '\.\.\/\.\.\/\.\.\/\.\.\/models/pedido.model';
               <input 
                 type="number" 
                 id="estoque"
-                formControlName="estoque" 
+                formControlName="ESTOQUE" 
                 class="form-control"
                 min="0"
                 placeholder="0">
-              <div *ngIf="produtoForm.get('estoque')?.invalid && produtoForm.get('estoque')?.touched" 
+              <div *ngIf="produtoForm.get('ESTOQUE')?.invalid && produtoForm.get('ESTOQUE')?.touched" 
                    class="error-message">
                 Estoque é obrigatório
               </div>
@@ -92,7 +92,7 @@ import { Produto } from '\.\.\/\.\.\/\.\.\/\.\.\/models/pedido.model';
               <input 
                 type="number" 
                 id="estoqueSeparacao"
-                formControlName="estoqueSeparacao" 
+                formControlName="estoquE_SEPARACAO" 
                 class="form-control"
                 min="0"
                 placeholder="0">
@@ -103,7 +103,7 @@ import { Produto } from '\.\.\/\.\.\/\.\.\/\.\.\/models/pedido.model';
               <input 
                 type="number" 
                 id="estoqueAtual"
-                formControlName="estoqueAtual" 
+                formControlName="estoquE_ATUAL" 
                 class="form-control"
                 min="0"
                 placeholder="0">
@@ -113,7 +113,7 @@ import { Produto } from '\.\.\/\.\.\/\.\.\/\.\.\/models/pedido.model';
           <div class="form-row">
             <div class="form-group">
               <label class="checkbox-label">
-                <input type="checkbox" formControlName="ativo">
+                <input type="checkbox" formControlName="ATIVO">
                 <span class="checkmark"></span>
                 Produto ativo
               </label>
@@ -137,26 +137,26 @@ export class ProdutoFormComponent implements OnInit {
     private produtosService: ProdutosService
   ) {
     this.produtoForm = this.fb.group({
-      nome: ['', [Validators.required, Validators.minLength(2)]],
-      sku: ['', [Validators.required, Validators.minLength(2)]],
-      precoUnitario: [0, [Validators.required, Validators.min(0.01)]],
-      estoque: [0, [Validators.required, Validators.min(0)]],
-      estoqueSeparacao: [0, [Validators.min(0)]],
-      estoqueAtual: [0, [Validators.min(0)]],
-      ativo: [true]
+      NOME: ['', [Validators.required, Validators.minLength(2)]],
+      SKU: ['', [Validators.required, Validators.minLength(2)]],
+      PRECO_UNITARIO: [0, [Validators.required, Validators.min(0.01)]],
+      ESTOQUE: [0, [Validators.required, Validators.min(0)]],
+      ESTOQUE_SEPARACAO: [0, [Validators.min(0)]],
+      ESTOQUE_ATUAL: [0, [Validators.min(0)]],
+      ATIVO: [true]
     });
   }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      if (params['id']) {
+      if (params['ID']) {
         this.isEdit = true;
-        this.produtoId = +params['id'];
+        this.produtoId = +params['ID'];
         this.carregarProduto();
       } else {
         // Para novos produtos, estoque atual = estoque inicial
-        this.produtoForm.get('estoque')?.valueChanges.subscribe(value => {
-          this.produtoForm.patchValue({ estoqueAtual: value }, { emitEvent: false });
+        this.produtoForm.get('ESTOQUE')?.valueChanges.subscribe(value => {
+          this.produtoForm.patchValue({ estoquE_ATUAL: value }, { emitEvent: false });
         });
       }
     });
@@ -185,7 +185,7 @@ export class ProdutoFormComponent implements OnInit {
     const produtoData = this.produtoForm.value;
 
     if (this.isEdit && this.produtoId) {
-      this.produtosService.atualizarProduto(this.produtoId, produtoData).subscribe({
+      this.produtosService.atualizarProduto(produtoData).subscribe({
         next: () => {
           alert('Produto atualizado com sucesso!');
           this.voltar();

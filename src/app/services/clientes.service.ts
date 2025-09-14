@@ -18,14 +18,24 @@ export class ClientesService {
   }
 
   criarCliente(cliente: Partial<Cliente>): Observable<Cliente> {
-    return this.api.post<Cliente>('clientes', cliente);
+    const clienteBackend = {
+      DOCUMENTO: cliente.documento,
+      NOME: cliente.nome,
+      EMAIL: cliente.email,
+      ATIVO: cliente.ativo,
+      TELEFONE: cliente.telefone
+    };
+    return this.api.post<Cliente>('clientes', clienteBackend);
   }
 
-  atualizarCliente(id: number, cliente: Partial<Cliente>): Observable<Cliente> {
-    return this.api.put<Cliente>(`clientes/${id}`, cliente);
-  }
-
-  excluirCliente(id: number): Observable<void> {
-    return this.api.delete<void>(`clientes/${id}`);
+  atualizarCliente(cliente: Partial<Cliente>): Observable<Cliente> {
+    const clienteBackend = {
+      DOCUMENTO: cliente.documento,
+      NOME: cliente.nome,
+      EMAIL: cliente.email,
+      ATIVO: cliente.ativo,
+      TELEFONE: cliente.telefone
+    };
+    return this.api.put<Cliente>('clientes', clienteBackend);
   }
 }

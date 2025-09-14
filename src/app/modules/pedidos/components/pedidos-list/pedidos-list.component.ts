@@ -211,17 +211,9 @@ export class PedidosListComponent implements OnInit {
       data: this.dataBaixa
     };
 
-    this.pedidosService.baixarPedido(this.pedidoSelecionado.id, dadosPagamento).subscribe({
-      next: () => {
-        this.carregarPedidos();
-        this.fecharModalBaixa();
-        alert('Pedido baixado com sucesso!');
-      },
-      error: (error) => {
-        console.error('Erro ao baixar pedido:', error);
-        alert('Erro ao baixar pedido.');
-      }
-    });
+    // Método de baixar pedido não disponível no backend
+    alert('Funcionalidade de baixar pedido não disponível no momento.');
+    this.fecharModalBaixa();
   }
 
   fecharModal() {

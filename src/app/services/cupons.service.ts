@@ -18,14 +18,26 @@ export class CuponsService {
   }
 
   criarCupom(cupom: Partial<Cupom>): Observable<Cupom> {
-    return this.api.post<Cupom>('cupons', cupom);
+    const cupomBackend = {
+      CODIGO: cupom.codigo,
+      TIPO_DESCONTO: cupom.tipoDesconto,
+      VALOR_DESCONTO: cupom.valorDesconto,
+      VALIDADE_INICIO: cupom.validadeInicio,
+      VALIDADE_FIM: cupom.validadeFim,
+      USO_MAXIMO: cupom.usoMaximo
+    };
+    return this.api.post<Cupom>('cupons', cupomBackend);
   }
 
-  atualizarCupom(codigo: string, cupom: Partial<Cupom>): Observable<Cupom> {
-    return this.api.put<Cupom>(`cupons/${codigo}`, cupom);
-  }
-
-  excluirCupom(codigo: string): Observable<void> {
-    return this.api.delete<void>(`cupons/${codigo}`);
+  atualizarCupom(cupom: Partial<Cupom>): Observable<Cupom> {
+    const cupomBackend = {
+      CODIGO: cupom.codigo,
+      TIPO_DESCONTO: cupom.tipoDesconto,
+      VALOR_DESCONTO: cupom.valorDesconto,
+      VALIDADE_INICIO: cupom.validadeInicio,
+      VALIDADE_FIM: cupom.validadeFim,
+      USO_MAXIMO: cupom.usoMaximo
+    };
+    return this.api.put<Cupom>('cupons', cupomBackend);
   }
 }

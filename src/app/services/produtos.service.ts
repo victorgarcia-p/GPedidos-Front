@@ -18,14 +18,24 @@ export class ProdutosService {
   }
 
   criarProduto(produto: Partial<Produto>): Observable<Produto> {
-    return this.api.post<Produto>('produtos', produto);
+    const produtoBackend = {
+      SKU: produto.sku,
+      NOME: produto.nome,
+      PRECO_UNITARIO: produto.precoUnitario,
+      ATIVO: produto.ativo,
+      ESTOQUE: produto.estoque
+    };
+    return this.api.post<Produto>('produtos', produtoBackend);
   }
 
-  atualizarProduto(id: number, produto: Partial<Produto>): Observable<Produto> {
-    return this.api.put<Produto>(`produtos/${id}`, produto);
-  }
-
-  excluirProduto(id: number): Observable<void> {
-    return this.api.delete<void>(`produtos/${id}`);
+  atualizarProduto(produto: Partial<Produto>): Observable<Produto> {
+    const produtoBackend = {
+      SKU: produto.sku,
+      NOME: produto.nome,
+      PRECO_UNITARIO: produto.precoUnitario,
+      ATIVO: produto.ativo,
+      ESTOQUE: produto.estoque
+    };
+    return this.api.put<Produto>('produtos', produtoBackend);
   }
 }

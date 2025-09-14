@@ -13,15 +13,25 @@ export class LancamentosService {
     return this.api.get<Lancamento[]>('lancamentos');
   }
 
-  getLancamento(id: number, parcela: number): Observable<Lancamento> {
-    return this.api.get<Lancamento>(`lancamentos/${id}/${parcela}`);
+  getLancamento(id: number): Observable<Lancamento> {
+    return this.api.get<Lancamento>(`lancamentos/${id}`);
   }
 
-  baixarLancamento(id: number, parcela: number, dadosBaixa: Partial<Baixa>): Observable<Baixa> {
-    return this.api.post<Baixa>(`lancamentos/${id}/${parcela}/baixar`, dadosBaixa);
+  baixarLancamento(dadosBaixa: any): Observable<any> {
+    const lancamentoBackend = {
+      ID: dadosBaixa.id,
+      PARCELA: dadosBaixa.parcela,
+      VALOR_BAIXADO: dadosBaixa.valorBaixa
+    };
+    return this.api.put<any>('lancamentos/baixar', lancamentoBackend);
   }
 
-  cancelarLancamento(id: number, parcela: number): Observable<Lancamento> {
-    return this.api.put<Lancamento>(`lancamentos/${id}/${parcela}/cancelar`, {});
+  cancelarLancamento(dadosLancamento: any): Observable<any> {
+    const lancamentoBackend = {
+      ID: dadosLancamento.id,
+      PARCELA: dadosLancamento.parcela,
+      VALOR_BAIXADO: 0
+    };
+    return this.api.put<any>('lancamentos/cancelar', lancamentoBackend);
   }
 }

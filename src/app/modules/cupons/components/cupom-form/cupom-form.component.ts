@@ -199,7 +199,7 @@ export class CupomFormComponent implements OnInit {
     };
 
     if (this.isEdit && this.cupomCodigo) {
-      this.cuponsService.atualizarCupom(this.cupomCodigo, cupomData).subscribe({
+      this.cuponsService.atualizarCupom(cupomData).subscribe({
         next: () => {
           alert('Cupom atualizado com sucesso!');
           this.voltar();

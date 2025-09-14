@@ -101,7 +101,7 @@ import { CupomSelectorComponent } from '../cupom-selector/cupom-selector.compone
 export class PedidoFormComponent implements OnInit {
   pedidoForm: FormGroup;
   isEdit = false;
-  pedidoId: number | null = null;
+  pedidoid: number | null = null;
   
   clienteSelecionado: Cliente | null = null;
   cupomSelecionado: Cupom | null = null;
@@ -134,7 +134,7 @@ export class PedidoFormComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEdit = true;
-        this.pedidoId = +params['id'];
+        this.pedidoid = +params['id'];
         this.carregarPedido();
       } else {
         this.gerarNumeroPedido();
@@ -143,13 +143,13 @@ export class PedidoFormComponent implements OnInit {
   }
 
   carregarPedido() {
-    if (!this.pedidoId) return;
+    if (!this.pedidoid) return;
 
-    this.pedidosService.getPedido(this.pedidoId).subscribe({
+    this.pedidosService.getPedido(this.pedidoid).subscribe({
       next: (pedido) => {
         this.pedidoForm.patchValue(pedido);
         this.clienteSelecionado = pedido.cliente || null;
-        this.cupomSelecionado = pedido.cupom || null;
+        this.cupomSelecionado = pedido.cupomObj || null;
         this.itens = pedido.itens || [];
         this.calcularTotais();
       },
@@ -181,6 +181,7 @@ export class PedidoFormComponent implements OnInit {
     
     if (itemExistente) {
       itemExistente.quantidade += 1;
+      this.calcularItem(itemExistente);
     } else {
       const novoItem: ItemPedido = {
         id: 0,
@@ -207,9 +208,15 @@ export class PedidoFormComponent implements OnInit {
   atualizarItem(itemAtualizado: ItemPedido) {
     const index = this.itens.findIndex(item => item.id === itemAtualizado.id);
     if (index !== -1) {
+      this.calcularItem(itemAtualizado);
       this.itens[index] = itemAtualizado;
       this.calcularTotais();
     }
+  }
+
+  calcularItem(item: ItemPedido) {
+    item.valorBruto = item.precoUnitario * item.quantidade;
+    item.valorLiquido = item.valorBruto - item.desconto;
   }
 
   calcularTotais() {
@@ -245,23 +252,25 @@ export class PedidoFormComponent implements OnInit {
       return;
     }
 
-    const pedidoData = {
-      ...this.pedidoForm.value,
+    // Recalcular todos os itens antes de enviar
+    this.itens.forEach(item => this.calcularItem(item));
+    this.calcularTotais();
+
+    // Converter para o formato esperado pelo frontend (será convertido pelo ApiService)
+    const pedidoData: Partial<Pedido> = {
+      clienteId: this.clienteSelecionado!.id,
       itens: this.itens,
-      status: StatusPedido.Rascunho
+      status: StatusPedido.Rascunho,
+      cupom: this.cupomSelecionado?.codigo || undefined,
+      totalBruto: this.totalBruto,
+      desconto: this.desconto,
+      totalLiquido: this.totalLiquido
     };
 
-    if (this.isEdit && this.pedidoId) {
-      this.pedidosService.atualizarPedido(this.pedidoId, pedidoData).subscribe({
-        next: () => {
-          alert('Pedido atualizado com sucesso!');
-          this.voltar();
-        },
-        error: (error) => {
-          console.error('Erro ao atualizar pedido:', error);
-          alert('Erro ao atualizar pedido.');
-        }
-      });
+    if (this.isEdit && this.pedidoid) {
+      // Método de atualização não disponível no backend
+      alert('Funcionalidade de atualização não disponível no momento.');
+      this.voltar();
     } else {
       this.pedidosService.criarPedido(pedidoData).subscribe({
         next: () => {
@@ -270,7 +279,7 @@ export class PedidoFormComponent implements OnInit {
         },
         error: (error) => {
           console.error('Erro ao criar pedido:', error);
-          alert('Erro ao criar pedido.');
+          alert('Erro ao criar pedido: ' + (error.error?.message || error.message || 'Erro desconhecido'));
         }
       });
     }

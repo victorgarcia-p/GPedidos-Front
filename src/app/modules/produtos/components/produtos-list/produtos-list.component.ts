@@ -47,8 +47,10 @@ export class ProdutosListComponent implements OnInit {
   columns = [
     { header: 'Nome', field: 'nome' },
     { header: 'SKU', field: 'sku' },
-    { header: 'Preço', field: 'precoUnitario', template: 'currency' },
-    { header: 'Estoque', field: 'estoqueAtual' },
+    { header: 'Preço', field: 'precO_UNITARIO', template: 'currency' },
+    { header: 'Estoque', field: 'estoque' },
+    { header: 'Separado', field: 'estoquE_SEPARACAO' },
+    { header: 'Estoque Atual', field: 'estoquE_ATUAL' },
     { header: 'Status', field: 'ativo', template: 'status' }
   ];
 
@@ -85,19 +87,9 @@ export class ProdutosListComponent implements OnInit {
   }
 
   executarExclusao() {
-    if (!this.produtoParaExcluir) return;
-
-    this.produtosService.excluirProduto(this.produtoParaExcluir.id).subscribe({
-      next: () => {
-        this.carregarProdutos();
-        this.fecharModal();
-        alert('Produto excluído com sucesso!');
-      },
-      error: (error) => {
-        console.error('Erro ao excluir produto:', error);
-        alert('Erro ao excluir produto.');
-      }
-    });
+    // Método de exclusão não disponível no backend
+    alert('Funcionalidade de exclusão não disponível no momento.');
+    this.fecharModal();
   }
 
   fecharModal() {

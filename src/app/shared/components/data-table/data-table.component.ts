@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
       <div class="table-header">
         <h3>{{ title }}</h3>
         <button *ngIf="showAddButton" class="btn btn-primary" (click)="onAdd.emit()">
-          <span class="icon">➕</span>
+          <span class="icon"></span>
           {{ addButtonText }}
         </button>
       </div>
@@ -20,30 +20,27 @@ import { CommonModule } from '@angular/common';
           <thead>
             <tr>
               <th *ngFor="let column of columns">{{ column.header }}</th>
-              <th *ngIf="showActions" class="actions-column">Ações</th>
+              <th *ngIf="showActions" class="actions-column">A��es</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of data; trackBy: trackByFn">
               <td *ngFor="let column of columns">
-                <ng-container *ngIf="column.template; else defaultCell">
-                  <ng-container *ngTemplateOutlet="column.template; context: { $implicit: item, column: column }"></ng-container>
+                <ng-container [ngSwitch]="column.template">
+                  <span *ngSwitchCase="'currency'">R$ {{ formatCurrency(getValue(item, column.field)) }}</span>
+                  <span *ngSwitchCase="'status'">{{ getStatusText(getValue(item, column.field)) }}</span>
+                  <span *ngSwitchCase="'date'">{{ formatDate(getValue(item, column.field)) }}</span>
+                  <span *ngSwitchDefault>{{ getValue(item, column.field) }}</span>
                 </ng-container>
-                <ng-template #defaultCell>
-                  {{ getValue(item, column.field) }}
-                </ng-template>
               </td>
               <td *ngIf="showActions" class="actions-column">
                 <div class="action-buttons">
                   <button *ngIf="showEditButton" class="btn btn-sm btn-secondary" (click)="onEdit.emit(item)">
-                    ✏️
+                    
                   </button>
                   <button *ngIf="showDeleteButton" class="btn btn-sm btn-danger" (click)="onDelete.emit(item)">
-                    🗑️
+                    
                   </button>
-                  <ng-container *ngIf="customActions">
-                    <ng-container *ngTemplateOutlet="customActions; context: { $implicit: item }"></ng-container>
-                  </ng-container>
                 </div>
               </td>
             </tr>
@@ -79,5 +76,20 @@ export class DataTableComponent {
 
   getValue(item: any, field: string): any {
     return field.split('.').reduce((obj, key) => obj?.[key], item);
+  }
+
+  getStatusText(value: boolean): string {
+    return value ? 'Ativo' : 'Inativo';
+  }
+
+  formatCurrency(value: number): string {
+    if (value == null) return '0,00';
+    return value.toFixed(2).replace('.', ',');
+  }
+
+  formatDate(value: string): string {
+    if (!value) return '';
+    const date = new Date(value);
+    return date.toLocaleDateString('pt-BR');
   }
 }

@@ -130,11 +130,7 @@ export class LancamentosListComponent implements OnInit {
       dataBaixa: new Date(this.dataBaixa)
     };
 
-    this.lancamentosService.baixarLancamento(
-      this.lancamentoSelecionado.id, 
-      this.lancamentoSelecionado.parcela, 
-      dadosBaixa
-    ).subscribe({
+    this.lancamentosService.baixarLancamento(dadosBaixa).subscribe({
       next: () => {
         this.carregarLancamentos();
         this.fecharModalBaixa();
@@ -154,7 +150,7 @@ export class LancamentosListComponent implements OnInit {
 
     switch (tipo) {
       case 'cancelar':
-        this.lancamentosService.cancelarLancamento(lancamento.id, lancamento.parcela).subscribe({
+        this.lancamentosService.cancelarLancamento({ id: lancamento.id, parcela: lancamento.parcela }).subscribe({
           next: () => {
             this.carregarLancamentos();
             this.fecharModal();

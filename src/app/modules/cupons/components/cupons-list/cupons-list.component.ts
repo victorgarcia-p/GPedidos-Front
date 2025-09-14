@@ -87,19 +87,9 @@ export class CuponsListComponent implements OnInit {
   }
 
   executarExclusao() {
-    if (!this.cupomParaExcluir) return;
-
-    this.cuponsService.excluirCupom(this.cupomParaExcluir.codigo).subscribe({
-      next: () => {
-        this.carregarCupons();
-        this.fecharModal();
-        alert('Cupom excluído com sucesso!');
-      },
-      error: (error) => {
-        console.error('Erro ao excluir cupom:', error);
-        alert('Erro ao excluir cupom.');
-      }
-    });
+    // Método de exclusão não disponível no backend
+    alert('Funcionalidade de exclusão não disponível no momento.');
+    this.fecharModal();
   }
 
   fecharModal() {

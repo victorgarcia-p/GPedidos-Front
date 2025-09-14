@@ -85,19 +85,9 @@ export class ClientesListComponent implements OnInit {
   }
 
   executarExclusao() {
-    if (!this.clienteParaExcluir) return;
-
-    this.clientesService.excluirCliente(this.clienteParaExcluir.id).subscribe({
-      next: () => {
-        this.carregarClientes();
-        this.fecharModal();
-        alert('Cliente excluído com sucesso!');
-      },
-      error: (error) => {
-        console.error('Erro ao excluir cliente:', error);
-        alert('Erro ao excluir cliente.');
-      }
-    });
+    // Método de exclusão não disponível no backend
+    alert('Funcionalidade de exclusão não disponível no momento.');
+    this.fecharModal();
   }
 
   fecharModal() {

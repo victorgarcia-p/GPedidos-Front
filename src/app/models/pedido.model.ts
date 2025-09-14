@@ -4,14 +4,14 @@ export interface Pedido {
   clienteId: number;
   itens: ItemPedido[];
   status: StatusPedido;
-  cupomId?: string;
+  cupom?: string;
   totalBruto: number;
   desconto: number;
   totalLiquido: number;
   criadoEm: Date;
   numeroNota?: string;
   cliente?: Cliente;
-  cupom?: Cupom;
+  cupomObj?: Cupom;
   lancamentos?: Lancamento[];
 }
 

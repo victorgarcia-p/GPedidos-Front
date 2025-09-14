@@ -201,7 +201,7 @@ export class ClienteFormComponent implements OnInit {
     };
 
     if (this.isEdit && this.clienteId) {
-      this.clientesService.atualizarCliente(this.clienteId, clienteData).subscribe({
+      this.clientesService.atualizarCliente(clienteData).subscribe({
         next: () => {
           alert('Cliente atualizado com sucesso!');
           this.voltar();

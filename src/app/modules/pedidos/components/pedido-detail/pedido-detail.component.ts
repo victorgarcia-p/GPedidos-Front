@@ -80,9 +80,9 @@ import { Pedido, StatusPedido } from '\.\.\/\.\.\/\.\.\/\.\.\/models/pedido.mode
         <div class="info-section" *ngIf="pedido.cupom">
           <h3>Cupom Aplicado</h3>
           <div class="cupom-info">
-            <strong>{{ pedido.cupom.codigo }}</strong>
-            <span class="desconto-cupom">
-              {{ getDescontoCupomText(pedido.cupom) }}
+            <strong>{{ pedido.cupom }}</strong>
+            <span class="desconto-cupom" *ngIf="pedido.cupomObj">
+              {{ getDescontoCupomText(pedido.cupomObj) }}
             </span>
           </div>
         </div>

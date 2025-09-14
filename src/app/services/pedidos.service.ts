@@ -18,34 +18,38 @@ export class PedidosService {
   }
 
   criarPedido(pedido: Partial<Pedido>): Observable<Pedido> {
-    return this.api.post<Pedido>('pedidos', pedido);
-  }
-
-  atualizarPedido(id: number, pedido: Partial<Pedido>): Observable<Pedido> {
-    return this.api.put<Pedido>(`pedidos/${id}`, pedido);
+    // Converter dados do frontend para o formato do backend
+    const pedidoBackend = {
+      CLIENTE_ID: pedido.clienteId,
+      ITENS: pedido.itens?.map(item => ({
+        PRODUTO_ID: item.produtoId,
+        PRECO_UNITARIO: item.precoUnitario,
+        QUANTIDADE: item.quantidade,
+        VALOR_BRUTO: item.valorBruto,
+        DESCONTO: item.desconto,
+        VALOR_LIQUIDO: item.valorLiquido
+      })) || [],
+      STATUS: pedido.status,
+      CUPOM: pedido.cupom,
+      TOTAL_BRUTO: pedido.totalBruto,
+      DESCONTO: pedido.desconto,
+      TOTAL_LIQUIDO: pedido.totalLiquido,
+      PAGAMENTOS: [] // Por enquanto vazio
+    };
+    
+    console.log('Enviando dados do pedido para o backend:', pedidoBackend);
+    return this.api.post<Pedido>('pedidos', pedidoBackend);
   }
 
   cancelarPedido(id: number): Observable<Pedido> {
-    return this.api.put<Pedido>(`pedidos/${id}/cancelar`, {});
-  }
-
-  baixarPedido(id: number, dadosPagamento: any): Observable<Pedido> {
-    return this.api.put<Pedido>(`pedidos/${id}/baixar`, dadosPagamento);
+    return this.api.put<Pedido>(`pedidos/cancelar/${id}`, {});
   }
 
   faturarPedido(id: number): Observable<Pedido> {
-    return this.api.put<Pedido>(`pedidos/${id}/faturar`, {});
+    return this.api.put<Pedido>(`pedidos/faturar/${id}`, {});
   }
 
-  adicionarItem(pedidoId: number, item: Partial<ItemPedido>): Observable<ItemPedido> {
-    return this.api.post<ItemPedido>(`pedidos/${pedidoId}/itens`, item);
-  }
-
-  removerItem(pedidoId: number, itemId: number): Observable<void> {
-    return this.api.delete<void>(`pedidos/${pedidoId}/itens/${itemId}`);
-  }
-
-  aplicarCupom(pedidoId: number, codigoCupom: string): Observable<Pedido> {
-    return this.api.put<Pedido>(`pedidos/${pedidoId}/cupom`, { codigo: codigoCupom });
+  definirPedidoOuPreVenda(id: number): Observable<Pedido> {
+    return this.api.put<Pedido>(`pedidos/alterar/${id}`, {});
   }
 }
