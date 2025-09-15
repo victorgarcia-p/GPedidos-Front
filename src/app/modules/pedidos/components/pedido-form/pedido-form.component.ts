@@ -173,7 +173,7 @@ export class PedidoFormComponent implements OnInit {
   onCupomSelecionado(cupom: Cupom | null) {
     this.cupomSelecionado = cupom;
     this.pedidoForm.patchValue({ cupomId: cupom?.codigo || null });
-    this.calcularDesconto();
+    this.calcularTotais();
   }
 
   adicionarProduto(produto: Produto) {
@@ -220,10 +220,19 @@ export class PedidoFormComponent implements OnInit {
   }
 
   calcularTotais() {
-    this.totalBruto = this.itens.reduce((total, item) => total + item.valorBruto, 0);
-    this.calcularDesconto();
-    this.totalLiquido = this.totalBruto - this.desconto;
-    
+    // Total bruto: soma dos valores brutos dos itens (preço x quantidade)
+    this.totalBruto = this.itens.reduce((total, item) => total + (item.valorBruto || 0), 0);
+
+    // Desconto de itens: soma dos descontos individuais informados em cada item
+    const descontoItens = this.itens.reduce((total, item) => total + (item.desconto || 0), 0);
+
+    // Desconto de cupom calculado sobre o valor após descontos dos itens
+    const baseParaCupom = Math.max(this.totalBruto - descontoItens, 0);
+    const descontoCupom = this.calcularDescontoCupom(baseParaCupom);
+
+    this.desconto = descontoItens + descontoCupom;
+    this.totalLiquido = Math.max(this.totalBruto - this.desconto, 0);
+
     this.pedidoForm.patchValue({
       totalBruto: this.totalBruto,
       desconto: this.desconto,
@@ -231,19 +240,13 @@ export class PedidoFormComponent implements OnInit {
     });
   }
 
-  calcularDesconto() {
-    if (!this.cupomSelecionado) {
-      this.desconto = 0;
-      return;
-    }
-
+  private calcularDescontoCupom(base: number): number {
+    if (!this.cupomSelecionado) return 0;
     const { tipoDesconto, valorDesconto } = this.cupomSelecionado;
-    
-    if (tipoDesconto === 0) { // ValorFixo
-      this.desconto = Math.min(valorDesconto, this.totalBruto);
-    } else { // Porcentagem
-      this.desconto = (this.totalBruto * valorDesconto) / 100;
+    if (tipoDesconto === 0) {
+      return Math.min(valorDesconto, base);
     }
+    return (base * valorDesconto) / 100;
   }
 
   salvar() {

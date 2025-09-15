@@ -48,7 +48,7 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
                   <span class="sku">{{ produto.sku }}</span>
                 </div>
                 <div class="produto-details">
-                  <span class="preco">{{ produto.precoUnitario | currency:'BRL' }}</span>
+                  <span class="preco">R$ {{ (produto.precoUnitario || 0) | number:'1.2-2' }}</span>
                   <span class="estoque" [class.baixo]="produto.estoqueAtual < 10">
                     Estoque: {{ produto.estoqueAtual }}
                   </span>

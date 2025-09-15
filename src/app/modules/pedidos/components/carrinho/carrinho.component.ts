@@ -22,7 +22,7 @@ import { ItemPedido } from '\.\.\/\.\.\/\.\.\/\.\.\/models/pedido.model';
               <span class="sku">{{ item.produto?.sku }}</span>
             </div>
             <div class="item-details">
-              <span class="preco-unitario">{{ item.precoUnitario | currency:'BRL' }} cada</span>
+              <span class="preco-unitario">R$ {{ (item.precoUnitario || 0) | number:'1.2-2' }} cada</span>
             </div>
           </div>
 
@@ -91,9 +91,14 @@ export class CarrinhoComponent {
   }
 
   atualizarItem(item: ItemPedido) {
+    // Sanitizar valores
+    item.quantidade = Math.max(1, Number(item.quantidade || 1));
+    item.precoUnitario = Number(item.precoUnitario || 0);
+    item.desconto = Number(item.desconto || 0);
+
     // Recalcular valores do item
     item.valorBruto = item.precoUnitario * item.quantidade;
-    item.valorLiquido = item.valorBruto - item.desconto;
+    item.valorLiquido = Math.max(item.valorBruto - item.desconto, 0);
 
     // Emitir evento para o componente pai recalcular totais
     this.itemAtualizado.emit(item);
@@ -104,6 +109,6 @@ export class CarrinhoComponent {
   }
 
   calcularTotalItem(item: ItemPedido): number {
-    return item.valorLiquido;
+    return Math.max(item.valorLiquido || 0, 0);
   }
 }

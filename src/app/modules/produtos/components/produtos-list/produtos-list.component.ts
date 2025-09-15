@@ -47,10 +47,10 @@ export class ProdutosListComponent implements OnInit {
   columns = [
     { header: 'Nome', field: 'nome' },
     { header: 'SKU', field: 'sku' },
-    { header: 'Preço', field: 'precO_UNITARIO', template: 'currency' },
+    { header: 'Preço', field: 'precoUnitario', template: 'currency' },
     { header: 'Estoque', field: 'estoque' },
-    { header: 'Separado', field: 'estoquE_SEPARACAO' },
-    { header: 'Estoque Atual', field: 'estoquE_ATUAL' },
+    { header: 'Separado', field: 'estoqueSeparacao' },
+    { header: 'Estoque Atual', field: 'estoqueAtual' },
     { header: 'Status', field: 'ativo', template: 'status' }
   ];
 
